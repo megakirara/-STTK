@@ -13,33 +13,39 @@
         html, body { height: 100%; margin: 0; padding: 0; overflow: hidden; background: #fff5f8; }
         body { font-family: "Hiragino Maru Gothic ProN", "Yu Gothic UI", sans-serif; -webkit-user-select: none; touch-action: pan-y; }
 
-        /* 背景グラデーション */
         #bg-container {
             position: fixed; top: 0; left: 0; width: 100%; height: 100%; z-index: 0;
             background: linear-gradient(-45deg, #ffcde8, #d2f4ff, #ffe0ec, #e9d5ff);
             background-size: 400% 400%; animation: gradientBG 15s ease infinite;
         }
 
-        /* 視認性の高い雲 */
         .cloud {
             position: absolute; border-radius: 50%; z-index: 1;
             background: rgba(255, 255, 255, 0.85);
             filter: blur(45px); animation: cloudDrift 25s infinite alternate ease-in-out;
         }
 
-        /* タイトルエリア：スマホ対応 */
         #header-wrapper {
             position: relative; z-index: 100; padding: 10px 5px;
             background: rgba(255, 255, 255, 0.5); backdrop-filter: blur(10px);
             border-bottom: 3px dotted #ffb7d1; text-align: center;
         }
+        
+        .header-link {
+            text-decoration: none;
+            display: inline-block;
+        }
         h1 {
             font-size: 1.1rem; margin: 0; color: #ff3399;
             text-shadow: 0 0 15px rgba(255,255,255,1), 2px 2px 0 #fff;
             letter-spacing: 1px; line-height: 1.4;
+            transition: transform 0.2s;
+        }
+        .header-link:hover h1 {
+            transform: scale(1.02);
+            text-shadow: 0 0 20px rgba(255,255,255,1), 2px 2px 0 #ff66cc;
         }
 
-        /* 計算機UI：スマホで押しやすく */
         #calc-ui {
             position: fixed; top: 80px; right: 10px; z-index: 200;
             background: rgba(255, 255, 255, 0.95); padding: 10px; border-radius: 15px;
@@ -61,10 +67,8 @@
         }
         .calc-btn:active { background: #ff66aa; color: white; transform: scale(0.95); }
 
-        /* 菌糸コンテナ */
         #mycelium { position: absolute; top: 0; left: 0; width: 100vw; height: 100vh; z-index: 10; pointer-events: none; }
 
-        /* 筑紫：スマホでもタップしやすく */
         .mushroom-wrapper {
             position: absolute; width: 90px; height: 130px;
             display: flex; justify-content: center; align-items: center;
@@ -93,7 +97,6 @@
 
         .heart { position:absolute; font-size:20px; pointer-events:none; z-index:250; }
 
-        /* レスポンシブ調整 */
         @media (max-width: 480px) {
             h1 { font-size: 0.95rem; }
             #calc-ui { top: 70px; }
@@ -109,7 +112,9 @@
     </div>
     
     <div id="header-wrapper">
-        <h1>🌸ステルス卓上計算機へようこそ。<br>任意のつくしに触れてXに投稿しよう。🌸</h1>
+        <a href="https://megakirara.github.io/-KINOKO/" class="header-link">
+            <h1>🌸ステルス卓上計算機へようこそ。<br>任意のつくしに触れてXに投稿しよう。🌸</h1>
+        </a>
     </div>
 
     <div id="calc-ui">
@@ -147,7 +152,6 @@
         const display = document.getElementById('calc-display');
         const concepts = ["カントのきゅん脳死命法💗","ニーチェのドキドキ回帰💗","脳死者の列ベクトル💗","ラプラスの脳死悪魔💗","ゲーデルのふわふわ定理💗","ピタゴラスのハート定理💗","オイラーのラブ公式💕","シュレディンガーのきゅん💕","脳死のきゅん的帰納法💕","ピタゴラスの脳死定理💕","脳味噌お花畑の証明💕","1Åの単純な脳細胞💗","ふわふわ脳死革命💕","ラブリー・ラジアン・コンプレックス💕","πの末尾で会いましょう💕","フェルマーの死せる脳細胞💕","あなたと量子レベルでもつれたい💕","エントロピー増大で脳死💕","フェルマーの最終脳死💕","リーマン予想と見せかけて恋💕",];
 
-        // ---- 計算機ロジック ----
         window.addChar = (char) => {
             if(display.value === "0" || display.value === "IQ200") display.value = char;
             else display.value += char;
@@ -160,7 +164,6 @@
             display.value = "IQ200";
         };
 
-        // ---- 愛の胞子（ハート）生成 ----
         function createHeart(x, y, emoji = '💗') {
             const h = document.createElement('div');
             h.className = 'heart'; h.innerText = emoji;
@@ -172,7 +175,6 @@
             ], { duration: 2200, easing: 'ease-out' }).onfinish = () => h.remove();
         }
 
-        // ---- 筑紫（きのこ）生成 ----
         function growMushroom(isBurst = false) {
             const wrapper = document.createElement('div');
             wrapper.className = 'mushroom-wrapper';
@@ -194,13 +196,11 @@
             wrapper.appendChild(inner);
             container.appendChild(wrapper);
 
-            // 「ファファファッ」と下からせり上がる
             requestAnimationFrame(() => {
                 wrapper.style.transform = `translateY(-${y + 20}vh)`;
                 wrapper.style.opacity = '1';
             });
 
-            // タッチ処理の改善
             let touchHandled = false;
             
             const handleTouch = (e) => {
@@ -216,7 +216,6 @@
                 if (!('ontouchstart' in window)) handleTouch(e);
             });
 
-            // クリック/タップ確定：X投稿
             wrapper.onclick = (e) => {
                 e.preventDefault();
                 const pos = e.touches ? e.touches[0] : e;
@@ -226,7 +225,6 @@
                 setTimeout(() => wrapper.remove(), 800);
             };
 
-            // 自然消滅
             setTimeout(() => {
                 if(wrapper.parentNode) {
                     wrapper.style.opacity = '0';
@@ -236,7 +234,6 @@
             }, isBurst ? 12000 : 18000);
         }
 
-        // 定期的に生やす
         setInterval(() => {
             const existingCount = document.querySelectorAll('.mushroom-wrapper').length;
             const maxMushrooms = window.innerWidth < 480 ? 8 : 12;
